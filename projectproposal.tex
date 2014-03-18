@@ -1,0 +1,57 @@
+\documentclass[pdftex,12pt,letter]{article}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage[toc,page]{appendix}
+\usepackage[justification=justified,singlelinecheck=false]{caption}
+\usepackage{placeins}
+\usepackage{hyperref}
+\pagestyle{fancy}
+\makeatletter
+  \renewcommand\@seccntformat[1]{\csname the#1\endcsname.\quad}
+\makeatother
+
+\newcolumntype {Y}{ >{\raggedright \arraybackslash }X}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\captionsetup{labelformat=empty}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{flushright}
+\HRule \\[0.4cm]
+{ \bfseries
+{\huge EECS 405 Project Proposal\\[1cm]}
+{\Large for\\[1cm]}
+{\large String Similarity Search\large\\[.1cm]
+An Exploration into Algorithmic Analysis and Improvment\\[3cm]}
+{\large Prepared by\\[1cm]James Fitzpatrick\\Kyle Patterson\\[2cm]
+Version 1.0\\
+March 18, 2014\\
+}}
+\end{flushright}
+\end{titlepage}
+\begin{table}[!h]
+\caption*{\bfseries Revision History}
+\begin{tabularx}{\textwidth }[t]{|l|l|Y|l|}
+\hline
+\bfseries Name & \bfseries Date & \bfseries Reasons for Change & \bfseries Version \\ \hline
+James Fitzpatrick & 3/17/14 & Initial Proposal \\ \hline
+\end{tabularx}
+\end{table}
+\FloatBarrier
+\newpage
+\tableofcontents
+\newpage
+\section{Abstract}
+This is our abstract. It will be nice. 
+\\\\
+
+\newpage
+
+\section{Introduction}
+
+\FloatBarrier
+\end{document}
