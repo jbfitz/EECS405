@@ -25,8 +25,7 @@
 { \bfseries
 {\huge EECS 405 Project Proposal\\[1cm]}
 {\Large for\\[1cm]}
-{\large String Similarity Search\large\\[.1cm]
-An Exploration into Algorithmic Analysis and Improvment\\[3cm]}
+{\large Improving Efficiency of String Similarity Searches through Clustered Pruning\\[3cm]}
 {\large Prepared by\\[1cm]James Fitzpatrick\\Kyle Patterson\\[2cm]
 Version 1.0\\
 March 18, 2014\\
@@ -38,17 +37,12 @@ March 18, 2014\\
 \begin{tabularx}{\textwidth }[t]{|l|l|Y|l|}
 \hline
 \bfseries Name & \bfseries Date & \bfseries Reasons for Change & \bfseries Version \\ \hline
-James Fitzpatrick & 3/17/14 & Initial Proposal \\ \hline
+James Fitzpatrick & 3/18/14 & Initial Proposal \\ \hline
 \end{tabularx}
 \end{table}
 \FloatBarrier
 \newpage
 \tableofcontents
-\newpage
-\section{Abstract}
-This is our abstract. It will be nice. 
-\\\\
-
 \newpage
 
 \section{Introduction}
@@ -56,24 +50,22 @@ This is our abstract. It will be nice.
 
 \section{Goals}
 \begin{enumerate}
-\item Research and gain a throrough understanding of the research papers
-\item Implement algorthims featured in the papers
-\item Add additional improvements, using the advantages of the 5-tuple, such as:
+\item Research and gain a thorough understanding of the research papers
+\item Implement the B\textsuperscript{ed} Tree and Top-K Algorithms
+\item Build clustered datasets based on the Longest Common Subsequence on:
 \begin{itemize}
-\item Mean
-\item Median
-\item Standard Deviation
-\item Longest Common Substring
+\item Movie Titles
+\item Publication Titles
 \end{itemize}
-\item Analyze the performance improvement of these additions
+\item Test the effects on the performance of the proposed clustering techniques 
+\item Formally present findings through a final presentation
 \end{enumerate}
 
 
 \section{Division of Labor}
-James Fitzpatrick will do the one set of things. 
-
-Kyle Patterson will do the other things
-
+James Fitzpatrick will be implementing the Top-K  Algorithim as documented in the papers below. James will also create an agnostic test harness to assess the differences between the different seardh algorithms and the different clustering techniques on the datasets. 
+\\\\
+Kyle Patterson will be implementing the B\textsuperscript{ed} Tree Algorithm and will be developing the clustering algorithms for the datasets. 
 
 \section{Papers Identified}
 
