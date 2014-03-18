@@ -1,5 +1,5 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}
 \contentsline {section}{\numberline {2}Problem Definition}{3}{section.2}
-\contentsline {section}{\numberline {3}Goals}{3}{section.3}
-\contentsline {section}{\numberline {4}Division of Labor}{4}{section.4}
-\contentsline {section}{\numberline {5}Papers Identified}{4}{section.5}
+\contentsline {section}{\numberline {3}Goals}{4}{section.3}
+\contentsline {section}{\numberline {4}Project Members and Task Distribution}{4}{section.4}
+\contentsline {section}{\numberline {5}Papers Identified}{5}{section.5}

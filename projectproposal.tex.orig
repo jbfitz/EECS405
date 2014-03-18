@@ -56,8 +56,9 @@ As presented in [9], using longest common subsequence (LCS) is the second most e
 \section{Goals}
 Throughout the course of the project, the following goals will be accomplished:
 \begin{enumerate}
+<<<<<<< HEAD
 \item Conduct a literature survey on String Similarity Search
-\item Implement the B\textsuperscript{ed}-Tree and Top-\textit{k} Algorithms
+\item Implement the B\textsuperscript{ed} Tree and Top-K Algorithms
 \item Build clustered datasets based on the Longest Common Subsequence on:
 \begin{itemize}
 \item Movie Titles - IMDB
@@ -68,12 +69,27 @@ Throughout the course of the project, the following goals will be accomplished:
 \item Correctness/Accuracy
 \item Speed
 \end{itemize}
-\item Test the effects on the performance of the proposed clustered search space by comparing to the performance in an unclustered search space
 \item Formally present findings through a final presentation
 \end{enumerate}
 
 \section{Project Members and Task Distribution}
+James Fitzpatrick will be implementing the Top-K  Algorithm. James will also create an agnostic test harness to assess the differences between the two search algorithms and the different clustering techniques on the datasets. 
+=======
+\item Research and gain a thorough understanding of the research papers
+\item Implement the B\textsuperscript{ed}-Tree and Top-\textit{k} Algorithms
+\item Build clustered datasets based on the Longest Common Subsequence on:
+\begin{itemize}
+\item Movie Titles from IMDB
+\item Publication Titles from DBLP
+\end{itemize}
+\item Test the effects on the performance of the proposed clustered search space by comparing to the performance in an unclustered search space
+\item Formally present findings through a final presentation
+\end{enumerate}
+
+
+\section{Division of Labor}
 James Fitzpatrick will be implementing the Top-\textit{k}  Algorithim as documented in the papers below. James will also create an agnostic test harness to assess the differences between the different seardh algorithms and the different clustering techniques on the datasets. 
+>>>>>>> 4eba2c9e3dc5a13c2e892210a552416cb5ce587b
 \\\\
 Kyle Patterson will be implementing the B\textsuperscript{ed}-Tree Algorithm and will be developing the clustering algorithm for the datasets. 
 
