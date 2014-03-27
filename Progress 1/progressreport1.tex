@@ -63,18 +63,81 @@ Throughout the course of the project, the following goals will be accomplished:
 \item Formally present findings through a final presentation
 \end{enumerate}
 
+\section{Preliminary Timeline}
+\begin{tabular} {| c | c |}
+\hline
+\bf{Date} & \bf{Objective}\\ \hline
+March 27th & Complete Literature Review\\ \hline
+March 30th & Complete Workstation Setup\\ \hline
+April 2nd & Finish Test Cases For Both Datasets\\ \hline
+April 5th & Finish Top-k and B\textsuperscript{ed} Tree Algorithms\\ \hline
+April 10th & Complete Initial Clustering Algorithm \\ \hline
+April 12th & Finish Implementing VGRAM Algorithm\\ \hline
+April 15th & Revise Clustering Algorithm If Necessary\\ \hline
+April 18th & Optimize Search Algorithms If Possible\\ \hline
+April 20th & Finish Testing of Algorithms\\ \hline
+April 21st & Finish Project\\ \hline
+\end{tabular}
+
+\section{Project Progress}
+\subsection{Literature Review}
+We have completed out Literature review of nearly a dozen related articles to our future project. The information gathered will help us judiciously detemine which diretion we want to take our various algorithms and also raise many valid concerns that we should be aware of. 
+\subsection{Project Server}
+Currently, we have set up our server for which we will be hosting our database. We will be utilizing Amazon AWS hosting service, using a Linux Machine in Amazon's Cloud. On this machine is a modified version of IMDB and the entirety of DBLP. We have abbreviated the IMDB database due to the size of the database compared to the size of our remote host. Due to hardware limitations on our remote machine, we will be developing our algorithms in C\# from local machine for testing then pushing up to the server for our final tests.
+
+
 \section{Literature Review}
 \begin{enumerate}
 \item Z. Zhang, et. al. "B\textsuperscript{\textit{ed}}-Tree: An All-Purpose Index Structure for String Similarity Search Based on Edit Disctance", SIGMOD 2010.
 \item Don Deng, Guoliang Li, Jianhua Feng, Wen-Syan Li, Top-\textit{k} String Similarity Search with Edit-Distance Constraints, ICDE 2013.
+
+	Top-K is a well-documented algorithm implemented both naively and using optimizations that reduce the number of comparisons used when comparing each string. In this paper, the authors propose a progressive framework that well help limit the number of comparisons performed. We find the strings that are of a set edit distance, starting at 0, in our set of string to match a query string. If we have our requisite number of strings, return the found set of strings. Else, we increment the edit distance and find the strings that are of a edit distance of x+1 away from our query string until k results are found. Using trie structures, we can accelerate this process by comparing many strings simultaneously.
+
+	Note that the edit distances used here also allow for user error to an extent, which is a desirable feature for any searching agent to have. 
+
+	We will be using the algorithms defined in the paper as the basis for our comparisons of our backing structures to see how clustering our dataset will improve our search times. 
+
 \item A. Andoni and K. Onak. Approximating edit distance in near-linear time. STOC, pages 199-204, 2009.
 \item M. Hadjieleftheriou, A. Chandel, N. Koudas, and D. Srivastava. Fast indexes and algorithms for set similarity selection queries. ICDE 2008, pages 267-276.
 \item M. Hadjieleftheriou, N. Koudas, and D. Srivastava. Incremental maintenance of length normalized indexes for approximate string matching. \textit{SIGMOD Conference}, pages 429-440, 2009.
+
+Indexes for datasets are usually updated at set time intervals. To prevent unnecessary reindexing, this paper recommends a lazy update propagation that allows for efficient incremental updates that immediately reflect new data.  Since removing strings can cause a number of dead grams, particularly in the case of less frequent grams, we need to be careful about when we update. The algorithm proposed creates a log of all of the changes to be made to the dataset, then will push all of the changes simultaneously when a memory or time restriction has been met. This will prevent unneeded reorderings from multiple small operations done to the dataset. 
+
+	This article shows us the importance of safely maintaining our datasets while having manageable indexing structures. This should be taken into consideration when we construct our indexing algorithms, but will not be the main focus of our project. 
+
+
 \item W. J. Masek and M. Paterson. A faster algorithm computing string edit distances. \textit{Journal of Computer and System Sciences}, 20(1):18-31, 1980.
 \item T. Kahveci and A. K. Singh. Efficient index structures for string databases. VLDB, pages 351-360, 2001.
+
+	This paper expresses the woes of many database managers, where the size of the database grows exponentially over time. As such searching larger and larger databases need to consider ways to utilize external memory to speed searches. 
+
+	With a focus on genetic string databases, the paper suggests mapping strings to integers to integer space with a wavelet function to reduce the problems caused by the sizes of dataspaces. The paper also utilizes Minimum Bounding Rectangles (MBRs) to help with range queries and nearest neighbor searches. 
+
+	While useful in the case of genetic structure and other substring sensitive data, the gains for extremely large strings with frequent substring may not hold in the case for movie title, publication title searches. 
+
+
 \item Z. Yang, J. Yu and M. Kitsuregawa. Fast algorithms for top-\textit{k} approximate string matching. AAAI, 2010.
+
+	While Top-k is a well-known algorithm, there are many ways to improve it from its naïve form. This paper examines how to expedite the search. Before going into the exact algorithms, the authors discuss filtering techniques. Count filtering utilizes the intuition that short strings that are a small edit distance away have a large number of shared q-grams. Length Filtering reduces the number of strings compared by eliminating strings that are of a certain threshold away from our query string. A string of length 13 is unlikely to be the best match for a string of length 4. As such, we dismiss it before performing the comparisons. 
+
+	The Branch and Bound algorithm utilizes length filtering to find the top-k strings. First a frequency threshold is set to 1 and length difference set to 0. We then Branch (extract the inverted lists of our query string to find the candidates that match given the length and frequency with our limitations) then Bound our strings (rank the candidate strings based on edit distance). We then expand our boundaries of length differences between our stored set of strings and our query until k strings have been found
+
+	The Adaptive q-gram selection exploits the two filtering strategies as well as adaptive q-gram selection, which exploits that strings that have small edit distances share most of the same q-grams. By having longer grams, we can (to an extent) exploit these similarities using larger grams until we need to find lower ranking strings until we have found our top k grams. 
+
+	These adaptations of the Top-k algorithm will prove useful in our consideration of how to best implement the top-k algorithm to exploit our backing clustering system. 
+
+
 \item R. Zafarani and H. Liu. Connecting users across social media sites: a behavioral-modeling approach. KDD, pages 41-49, 2013.
 \item M. Rafsanjani, Z. Varzaneh, N. Chukanlo. A survey of hierarchical clustering algorithms. TJMCS 5(3):229-240, 2012.
+\item C. Li, B. Wang, X, Yang. VGRAM: Improving Performance of Approximate Queries on String Collections Using Variable-Length Grams. VLDB, September 23-27, 2007.
+
+	Many string comparison algorithms consider grams of set lengths. However, there are many advantages and disadvantages to having any particular length of n-gram. Rather than to have a “one-for-all” solution to the strings, the authors propose a solution to generate grams of variable length between a minimum and maximum length based on a set gram dictionary, which is constructed based on the data collection of strings prior to the query. When computing the gram dictionary, we should only store grams that have a frequency above a certain threshold. The algorithm utilizes a trie to reduce the computations of grams that are substrings of longer grams, since the subgrams will necessarily occur when the larger grams are present. Since smaller grams are present in larger ones, the grams that survive pruning will more often than not be shorter grams. Longer grams will be present in data sets only if they are very frequent. 
+
+	This algorithm exploits many of the same principles that we should see in our clustering techniques as our clusters should be identified by longest common substrings. 
+
+
+
+
 
 \end{enumerate}
 \FloatBarrier
