@@ -73,15 +73,13 @@ namespace TopKSearch
         public static HashSet<String> SearchTopK(String query, int k)
         {
             HashSet<String> topmatch = new HashSet<String>();
-            HashSet<TrieNode> currentSet;
-            HashSet<TrieNode> nextSet = new HashSet<TrieNode>();
-
             char[] queryChars = query.ToCharArray();
 
             // Find strings for threshold = 0;
             TrieNode parent = data.root;
             TrieNode candidateNode;
             HashSet<TrieQuad> nextQuadSet = new HashSet<TrieQuad>();
+            HashSet<TrieQuad> currentQuadSet;
             int index = 0;
 
             while (index < query.Length && parent.children.ContainsKey(queryChars[parent.level + 1]))
@@ -128,7 +126,62 @@ namespace TopKSearch
 
             }
             // There are no more exact matches)
-            nextQuadSet.Add(new TrieQuad(parent, parent.min, parent.max, query, parent.level));
+            if (!parent.IsLeaf() || parent.children.Count > 0)
+            {
+                nextQuadSet.Add(new TrieQuad(parent, parent.min, parent.max, query, parent.level));
+            }
+
+            int threshold = 0;
+
+            while (topmatch.Count < k)
+            {
+                threshold++;
+                currentQuadSet = nextQuadSet;
+                HashSet<TrieQuad> potentialQuadSet = new HashSet<TrieQuad>();
+                nextQuadSet = new HashSet<TrieQuad>();
+
+
+                foreach (TrieQuad quad in currentQuadSet)
+                {
+                    // Substitution and Deletion
+
+                    
+                    foreach(TrieNode child in quad.node.children.Values){
+                        if(quad.qIndex + 2 < query.Length  && child.children.ContainsKey(queryChars[quad.qIndex + 2])){
+                            // Substituion
+                            TrieNode substitutionNode = child.children[queryChars[quad.qIndex + 2]];
+                            potentialQuadSet.Add(new TrieQuad(substitutionNode, substitutionNode.min, substitutionNode.max, query, quad.qIndex+2));
+                        }
+
+                        if(quad.qIndex + 1 < query.Length && child.children.ContainsKey(queryChars[quad.qIndex + 1])){
+                            // Deletion
+                            TrieNode deletionNode = child.children[queryChars[quad.qIndex + 1]];
+                            potentialQuadSet.Add(new TrieQuad(deletionNode, deletionNode.min, deletionNode.max, query, quad.qIndex+1));
+                        }
+                    }
+
+                    // Insertion
+                    if(quad.node.children.ContainsKey(queryChars[quad.qIndex + 2])){
+                        TrieNode insertionNode = quad.node.children[queryChars[quad.qIndex+2]];
+                        potentialQuadSet.Add(new TrieQuad(insertionNode, insertionNode.min, insertionNode.max, query, quad.qIndex+2));
+                    }
+                }
+
+
+                
+
+
+
+            }
+
+
+
+
+
+
+
+
+
 
             //Exact match for now. 
             return topmatch;
@@ -138,11 +191,11 @@ namespace TopKSearch
 
 
     class TrieQuad{
-        TrieNode node;
-        int lower;
-        int upper;
-        String query;
-        int qIndex;
+        public TrieNode node;
+        public int lower;
+        public int upper;
+        public String query;
+        public int qIndex;
         public TrieQuad(TrieNode tn, int l, int u, String q, int i){
             node = tn;
             lower = l;
