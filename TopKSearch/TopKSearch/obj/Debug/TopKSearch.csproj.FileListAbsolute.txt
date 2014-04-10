@@ -4,3 +4,9 @@ C:\Users\James\documents\visual studio 2013\Projects\TopKSearch\TopKSearch\bin\D
 C:\Users\James\documents\visual studio 2013\Projects\TopKSearch\TopKSearch\obj\Debug\TopKSearch.csprojResolveAssemblyReference.cache
 C:\Users\James\documents\visual studio 2013\Projects\TopKSearch\TopKSearch\obj\Debug\TopKSearch.exe
 C:\Users\James\documents\visual studio 2013\Projects\TopKSearch\TopKSearch\obj\Debug\TopKSearch.pdb
+C:\Users\James\Documents\GitHub\EECS405\TopKSearch\TopKSearch\bin\Debug\TopKSearch.exe.config
+C:\Users\James\Documents\GitHub\EECS405\TopKSearch\TopKSearch\obj\Debug\TopKSearch.exe
+C:\Users\James\Documents\GitHub\EECS405\TopKSearch\TopKSearch\obj\Debug\TopKSearch.pdb
+C:\Users\James\Documents\GitHub\EECS405\TopKSearch\TopKSearch\obj\Debug\TopKSearch.csprojResolveAssemblyReference.cache
+C:\Users\James\Documents\GitHub\EECS405\TopKSearch\TopKSearch\bin\Debug\TopKSearch.exe
+C:\Users\James\Documents\GitHub\EECS405\TopKSearch\TopKSearch\bin\Debug\TopKSearch.pdb

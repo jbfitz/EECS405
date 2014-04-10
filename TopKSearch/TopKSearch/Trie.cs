@@ -16,6 +16,7 @@ namespace TrieSpace
         public Trie()
         {
             root = new TrieNode('\0');
+            root.level = -1;
         }
 
         public void AddStrings(String[] strings)
@@ -42,7 +43,7 @@ namespace TrieSpace
 
         override public String ToString()
         {
-            return root.ToString();
+            return root.AllStrings();
         }
 
     }
@@ -56,6 +57,8 @@ namespace TrieSpace
         public int id;
         public bool root { get; set; }
         public bool endOfWord;
+        public int level;
+        public TrieNode parent;
 
 
         public TrieNode(char c)
@@ -86,6 +89,8 @@ namespace TrieSpace
             if (!this.children.ContainsKey(c))
             {
                 this.children.Add(c, new TrieNode(c));
+                this.children[c].level = this.level + 1;
+                this.children[c].parent = this;
             }
         }
 
@@ -122,26 +127,52 @@ namespace TrieSpace
             return endOfWord;
         }
 
+        public String AllStrings()
+        {
+            String startingString = "";
+            String returnString = "";
+
+            foreach (TrieNode child in children.Values)
+            {
+                List<String> substrings = child.GenerateStrings(startingString);
+                foreach (String substring in substrings)
+                {
+                    returnString += substring + "\n";
+                }
+            }
+
+            return returnString;
+        }
+
+        public List<String> GenerateStrings(String s)
+        {
+            List<String> endlist = new List<String>();
+
+            if (this.IsLeaf())
+            {
+                endlist.Add(s + this.character + " - " + this.id);
+            }
+
+            foreach (TrieNode child in children.Values)
+            {
+                foreach (String substring in child.GenerateStrings(s + this.character))
+                {
+                    endlist.Add(substring);
+                }
+            }
+
+            return endlist;
+        }
+
         override public String ToString()
         {
-            if (children.Count > 0)
+            if (parent.character == '\0')
             {
-                String returnString = "";
-                foreach (TrieNode child in children.Values)
-                {
-                    returnString += this.character + child.ToString();
-                }
-
-                if (this.endOfWord)
-                {
-                    returnString += this.character;
-                }
-                return returnString;
-
+                return this.character.ToString();
             }
             else
             {
-                return this.character.ToString();
+                return parent.ToString() + this.character;
             }
         }
     }
