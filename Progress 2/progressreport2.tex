@@ -70,14 +70,14 @@ Development will take place on local machines, due to the restricted resources o
 \\
 Algorithms will be developed using the C\# language. Our test data includes the titles of over 57,000 movies from IMDB and over 2.5 million publication titles from DBLP. 
 
-\section{Preliminary Timeline}
+\section{Adjusted Timeline}
 \begin{tabular} {| c | c |}
 \hline
 \bf{Date} & \bf{Objective}\\ \hline
 March 27th & Complete Literature Review\\ \hline
 March 30th & Complete Workstation Setup\\ \hline
 April 10th & Finish Top-k and B\textsuperscript{ed} Tree Algorithms\\ \hline
-April 10th & Finish implementing BIRCH Algorithm \\ \hline
+April 12th & Finish implementing BIRCH Algorithm \\ \hline
 April 14th & Finish Implementing VGRAM Algorithm\\ \hline
 April 15th & Revise BIRCH Algorithm if necessary\\ \hline
 April 16th & Finish Test Cases For Both Datasets\\ \hline
@@ -93,9 +93,13 @@ We have completed our Literature review of 12 related articles to our future pro
 Currently, we have set up our server for which we will be hosting our database. We will be utilizing Amazon AWS hosting service, using a Linux Machine in Amazon's Cloud. On this machine is a modified version of IMDB and the entirety of DBLP. We have abbreviated the IMDB database due to the size of the database compared to the size of our remote host. Due to hardware limitations on our remote machine, we will be developing our algorithms in C\# from local machines for testing and then upload them to the server for our final tests.
 \subsection{Top-K Algorithm}
 Our Top-K Algorithm is nearly completed. We still need to improve many minor details. Often our numbers along edge cases have been reporting values of numbers that are off by one when considering the ranges of nodes. However, a complete Top-K Algorithm should be finished shortly.
+\subsection{B\textsuperscript{ed}-Tree Algorithm}
+The B\textsuperscript{ed}-Tree is operational and has almost cleared the debugging phase. It is on schedule to enter the experimental portion of this project upon completion of the test cases.
+\subsection{BIRCH Algorithm}
+Progress on the BIRCH Algorithm is under way, though it was delayed from the preliminary schedule due to external constraints. Debugging is scheduled for April 12th to remain on schedule. Revisions will take place during the following days to join the data flow from the output of the clustered structures to the input of the Similarity Search Algorithms.
 
 \subsection{Challenges}
-Many of the algorithms that we are examining use very different bases for constructing the backing strucutres. As the Trie Structure in Top-k and the B+ tree exhibit very different properties, using a clustered form of our data will exploit these strengths and weaknesses in ways we did not originally anticipate. We will need to consider how to coorelate very different algorithms, if we choose to at all, with our backing clustering structure. 
+Many of the algorithms that we are examining use very different bases for constructing the backing strucutres. As the Tree Structure in Top-k and the B+ tree exhibit very different properties, using a clustered form of our data will exploit these strengths and weaknesses in ways we did not originally anticipate. We will need to consider how to coorelate very different algorithms, if we choose to at all, with our backing clustering structure. 
 
 
 

@@ -2,10 +2,12 @@
 \contentsline {section}{\numberline {2}Problem Definition}{2}{section.2}
 \contentsline {section}{\numberline {3}Goals}{2}{section.3}
 \contentsline {section}{\numberline {4}Project Execution}{3}{section.4}
-\contentsline {section}{\numberline {5}Preliminary Timeline}{4}{section.5}
+\contentsline {section}{\numberline {5}Adjusted Timeline}{4}{section.5}
 \contentsline {section}{\numberline {6}Project Progress}{4}{section.6}
 \contentsline {subsection}{\numberline {6.1}Literature Review}{4}{subsection.6.1}
 \contentsline {subsection}{\numberline {6.2}Project Server}{5}{subsection.6.2}
 \contentsline {subsection}{\numberline {6.3}Top-K Algorithm}{5}{subsection.6.3}
-\contentsline {subsection}{\numberline {6.4}Challenges}{5}{subsection.6.4}
-\contentsline {section}{\numberline {7}Literature Review}{5}{section.7}
+\contentsline {subsection}{\numberline {6.4}B\textsuperscript {ed}-Tree Algorithm}{5}{subsection.6.4}
+\contentsline {subsection}{\numberline {6.5}BIRCH Algorithm}{5}{subsection.6.5}
+\contentsline {subsection}{\numberline {6.6}Challenges}{5}{subsection.6.6}
+\contentsline {section}{\numberline {7}Literature Review}{6}{section.7}
