@@ -26,7 +26,11 @@ namespace TopKSearch
                 Console.WriteLine("What search do you want to look at?");
                 String querystring = Console.ReadLine();
 
-                HashSet<String> topK = SearchTopK(querystring, 5);
+                Console.WriteLine("How many terms do you want back?");
+                String strk = Console.ReadLine();
+                int k = Int16.Parse(strk);
+
+                HashSet<String> topK = SearchTopK(querystring, k);
 
                 Console.WriteLine("Valid Strigngs:");
                 foreach (String found in topK)
@@ -137,7 +141,7 @@ namespace TopKSearch
             {
                 threshold++;
                 currentQuadSet = nextQuadSet;
-                HashSet<TrieQuad> potentialQuadSet = new HashSet<TrieQuad>();
+                Queue<TrieQuad> potentialQuadQueue = new Queue<TrieQuad>();
                 nextQuadSet = new HashSet<TrieQuad>();
 
 
@@ -150,38 +154,51 @@ namespace TopKSearch
                         if(quad.qIndex + 2 < query.Length  && child.children.ContainsKey(queryChars[quad.qIndex + 2])){
                             // Substituion
                             TrieNode substitutionNode = child.children[queryChars[quad.qIndex + 2]];
-                            potentialQuadSet.Add(new TrieQuad(substitutionNode, substitutionNode.min, substitutionNode.max, query, quad.qIndex+2));
+                            potentialQuadQueue.Enqueue(new TrieQuad(substitutionNode, substitutionNode.min, substitutionNode.max, query, quad.qIndex+2));
                         }
 
                         if(quad.qIndex + 1 < query.Length && child.children.ContainsKey(queryChars[quad.qIndex + 1])){
                             // Deletion
                             TrieNode deletionNode = child.children[queryChars[quad.qIndex + 1]];
-                            potentialQuadSet.Add(new TrieQuad(deletionNode, deletionNode.min, deletionNode.max, query, quad.qIndex+1));
+                            potentialQuadQueue.Enqueue(new TrieQuad(deletionNode, deletionNode.min, deletionNode.max, query, quad.qIndex+1));
                         }
                     }
 
                     // Insertion
-                    if(quad.node.children.ContainsKey(queryChars[quad.qIndex + 2])){
+                    if(quad.qIndex + 2 < query.Length && quad.node.children.ContainsKey(queryChars[quad.qIndex + 2])){
                         TrieNode insertionNode = quad.node.children[queryChars[quad.qIndex+2]];
-                        potentialQuadSet.Add(new TrieQuad(insertionNode, insertionNode.min, insertionNode.max, query, quad.qIndex+2));
+                        potentialQuadQueue.Enqueue(new TrieQuad(insertionNode, insertionNode.min, insertionNode.max, query, quad.qIndex+2));
                     }
                 }
 
+                while(potentialQuadQueue.Count > 0)
+                {
+                    TrieQuad quad = potentialQuadQueue.Dequeue();
 
-                
-
-
-
+                    if (quad.qIndex + 1 >=  query.Length)
+                    {
+                        topmatch.Add(quad.node.ToString());
+                    }
+                    else if (quad.node.children.ContainsKey(queryChars[quad.qIndex + 1]))
+                    {
+                        TrieNode next = quad.node.children[queryChars[quad.qIndex+1]];
+                        // Is this string the best match we can get?
+                        if (quad.qIndex + 1 == query.Length - 1)
+                        {
+                            topmatch.Add(next.ToString());
+                        }
+                        potentialQuadQueue.Enqueue(new TrieQuad(next, next.min, next.max, query, quad.qIndex + 1));
+                    }
+                    else
+                    {
+                        nextQuadSet.Add(quad);
+                    }
+                    if (topmatch.Count > k)
+                    {
+                        return topmatch;
+                    }
+                }
             }
-
-
-
-
-
-
-
-
-
 
             //Exact match for now. 
             return topmatch;
