@@ -147,9 +147,19 @@ namespace TopKSearch
 
                 foreach (TrieQuad quad in currentQuadSet)
                 {
-                    // Substitution and Deletion
-
+                    if (quad.node.IsLeaf())
+                    {
+                        if(quad.qIndex + 1 == query.Length)
+                        {
+                            topmatch.Add(quad.node.ToString());
+                        }
+                        else
+                        {
+                            nextQuadSet.Add(new TrieQuad(quad.node, quad.lower, quad.upper, quad.query, quad.qIndex + 1));
+                        }
+                    }
                     
+                    // Substitution and Deletion
                     foreach(TrieNode child in quad.node.children.Values){
                         if(quad.qIndex + 2 < query.Length  && child.children.ContainsKey(queryChars[quad.qIndex + 2])){
                             // Substituion
