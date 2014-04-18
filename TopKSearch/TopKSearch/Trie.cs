@@ -54,7 +54,7 @@ namespace TrieSpace
         public char character { get; set; }
         public int max { get; set; }
         public int min { get; set; }
-        public int id;
+        public int id { get; set; }
         public bool root { get; set; }
         public bool endOfWord;
         public int level;

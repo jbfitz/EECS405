@@ -15,8 +15,9 @@ namespace TopKSearch
         static void Main(string[] args)
         {
             // Construct Trie
-            try
-            {
+            //Some men just like living dangerously
+            //try
+            //{
                 //Console.WriteLine("Please input the filename you wish to read from:");
                 //String filename = Console.ReadLine();
                 ConstructTrie("The Prince.txt");
@@ -32,19 +33,21 @@ namespace TopKSearch
 
                 HashSet<String> topK = SearchTopK(querystring, k);
 
-                Console.WriteLine("Valid Strigngs:");
+                Console.WriteLine("Valid Strings:");
                 foreach (String found in topK)
                 {
                     Console.WriteLine(found);
                 }
 
                 
-            }
+            //}
+            /*
             catch (Exception e)
             {
                 Console.Error.WriteLine("Error Encountered: ");
                 Console.Error.WriteLine(e.Message);
             }
+             * */
             Console.WriteLine("Press any button to exit...");
             Console.ReadKey();
 
@@ -101,7 +104,7 @@ namespace TopKSearch
                     }
                     else
                     {
-                        nextQuadSet.Add(new TrieQuad(candidateNode, candidateNode.id, candidateNode.id, query, candidateNode.level));
+                        nextQuadSet.Add(new TrieQuad(candidateNode, candidateNode.id, candidateNode.id, candidateNode.level, candidateNode.level));
                     }
                 }
 
@@ -113,13 +116,13 @@ namespace TopKSearch
                         // Add range smaller than the exact matching
                         if (candidateNode.min != parent.min)
                         {
-                            nextQuadSet.Add(new TrieQuad(parent, parent.min, candidateNode.min - 1, query, parent.level));
+                            nextQuadSet.Add(new TrieQuad(parent, parent.min, candidateNode.min - 1, parent.level, parent.level));
                         }
 
                         //Add range larger than exact matching
                         if (candidateNode.max != parent.max)
                         {
-                            nextQuadSet.Add(new TrieQuad(parent, candidateNode.max + 1, parent.max, query, parent.level));
+                            nextQuadSet.Add(new TrieQuad(parent, candidateNode.max + 1, parent.max, parent.level, parent.level));
                         }   
                     }
                     
@@ -129,10 +132,11 @@ namespace TopKSearch
                 index++;
 
             }
+
             // There are no more exact matches)
             if (!parent.IsLeaf() || parent.children.Count > 0)
             {
-                nextQuadSet.Add(new TrieQuad(parent, parent.min, parent.max, query, parent.level));
+                nextQuadSet.Add(new TrieQuad(parent, parent.min, parent.max, parent.level, parent.level));
             }
 
             int threshold = 0;
@@ -147,60 +151,75 @@ namespace TopKSearch
 
                 foreach (TrieQuad quad in currentQuadSet)
                 {
-                    if (quad.node.IsLeaf())
+                    if(quad.node.IsLeaf())
                     {
-                        if(quad.qIndex + 1 == query.Length)
-                        {
-                            topmatch.Add(quad.node.ToString());
-                        }
-                        else
-                        {
-                            nextQuadSet.Add(new TrieQuad(quad.node, quad.lower, quad.upper, quad.query, quad.qIndex + 1));
-                        }
+                        potentialQuadQueue.Enqueue(new TrieQuad(quad.node, quad.node.id, quad.node.id, quad.queryIndex, quad.stringIndex));
                     }
                     
                     // Substitution and Deletion
                     foreach(TrieNode child in quad.node.children.Values){
-                        if(quad.qIndex + 2 < query.Length  && child.children.ContainsKey(queryChars[quad.qIndex + 2])){
+                        if(quad.queryIndex + 2 < query.Length  && child.children.ContainsKey(queryChars[quad.queryIndex + 2])){
                             // Substituion
-                            TrieNode substitutionNode = child.children[queryChars[quad.qIndex + 2]];
-                            potentialQuadQueue.Enqueue(new TrieQuad(substitutionNode, substitutionNode.min, substitutionNode.max, query, quad.qIndex+2));
+                            TrieNode substitutionNode = child.children[queryChars[quad.queryIndex + 2]];
+                            potentialQuadQueue.Enqueue(new TrieQuad(substitutionNode, substitutionNode.min, substitutionNode.max,quad.queryIndex+1, substitutionNode.level ));
                         }
 
-                        if(quad.qIndex + 1 < query.Length && child.children.ContainsKey(queryChars[quad.qIndex + 1])){
+                        if(quad.queryIndex + 1 < query.Length && child.children.ContainsKey(queryChars[quad.queryIndex + 1])){
                             // Deletion
-                            TrieNode deletionNode = child.children[queryChars[quad.qIndex + 1]];
-                            potentialQuadQueue.Enqueue(new TrieQuad(deletionNode, deletionNode.min, deletionNode.max, query, quad.qIndex+1));
+                            TrieNode deletionNode = child.children[queryChars[quad.queryIndex + 1]];
+                            potentialQuadQueue.Enqueue(new TrieQuad(deletionNode, deletionNode.min, deletionNode.max, quad.queryIndex+1, deletionNode.level));
                         }
                     }
 
                     // Insertion
-                    if(quad.qIndex + 2 < query.Length && quad.node.children.ContainsKey(queryChars[quad.qIndex + 2])){
-                        TrieNode insertionNode = quad.node.children[queryChars[quad.qIndex+2]];
-                        potentialQuadQueue.Enqueue(new TrieQuad(insertionNode, insertionNode.min, insertionNode.max, query, quad.qIndex+2));
+                    if(quad.queryIndex + 2 < query.Length && quad.node.children.ContainsKey(queryChars[quad.queryIndex + 2])){
+                        TrieNode insertionNode = quad.node.children[queryChars[quad.queryIndex+2]];
+                        potentialQuadQueue.Enqueue(new TrieQuad(insertionNode, insertionNode.min, insertionNode.max, quad.queryIndex+2, insertionNode.level));
                     }
                 }
+
+
+                //Shortcut if we runout of search space
+                if (potentialQuadQueue.Count == 0)
+                {
+                    return topmatch;
+                }
+
 
                 while(potentialQuadQueue.Count > 0)
                 {
                     TrieQuad quad = potentialQuadQueue.Dequeue();
 
-                    if (quad.qIndex + 1 >=  query.Length)
+                    if (quad.queryIndex + 1 >=  query.Length)
                     {
-                        topmatch.Add(quad.node.ToString());
+                        if(quad.node.IsLeaf()){
+                            topmatch.Add(quad.node.ToString());
+
+                            if (topmatch.Count > k)
+                            {
+                                return topmatch;
+                            }
+                        }
                     }
-                    else if (quad.node.children.ContainsKey(queryChars[quad.qIndex + 1]))
+                    else if (quad.node.children.Count > 0 && quad.node.children.ContainsKey(queryChars[quad.queryIndex + 1]))
                     {
-                        TrieNode next = quad.node.children[queryChars[quad.qIndex+1]];
+                        TrieNode next = quad.node.children[queryChars[quad.queryIndex+1]];
                         // Is this string the best match we can get?
-                        if (quad.qIndex + 1 == query.Length - 1)
+                        if (quad.queryIndex + 1 == query.Length - 1 && quad.node.children[queryChars[quad.queryIndex + 1]].IsLeaf())
                         {
                             topmatch.Add(next.ToString());
+                            
+                            if (topmatch.Count > k)
+                            {
+                                return topmatch;
+                            }
                         }
-                        potentialQuadQueue.Enqueue(new TrieQuad(next, next.min, next.max, query, quad.qIndex + 1));
+                        potentialQuadQueue.Enqueue(new TrieQuad(next, next.min, next.max, quad.queryIndex + 1, next.level));
                     }
-                    else
+                    else if (quad.node.children.Count != 0 || quad.queryIndex > query.Length/2)
                     {
+                        //Prune some of the less useful ones away.. 
+                        quad.queryIndex++;
                         nextQuadSet.Add(quad);
                     }
                     if (topmatch.Count > k)
@@ -208,6 +227,7 @@ namespace TopKSearch
                         return topmatch;
                     }
                 }
+
             }
 
             //Exact match for now. 
@@ -221,14 +241,14 @@ namespace TopKSearch
         public TrieNode node;
         public int lower;
         public int upper;
-        public String query;
-        public int qIndex;
-        public TrieQuad(TrieNode tn, int l, int u, String q, int i){
+        public int queryIndex;
+        public int stringIndex;
+        public TrieQuad(TrieNode tn, int l, int u, int qi, int si){
             node = tn;
             lower = l;
             upper = u;
-            query = q;
-            qIndex = i;
+            queryIndex = qi;
+            stringIndex = si;
 
         }
     }
