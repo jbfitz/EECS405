@@ -15,11 +15,8 @@ namespace TopKSearch
         static void Main(string[] args)
         {
             // Construct Trie
-            //Some men just like living dangerously
-            //try
-            //{
-                //Console.WriteLine("Please input the filename you wish to read from:");
-                //String filename = Console.ReadLine();
+            try
+            {
                 ConstructTrie("The Prince.txt");
                 Console.WriteLine(data);
                 Console.WriteLine(data.root.min);
@@ -40,14 +37,14 @@ namespace TopKSearch
                 }
 
                 
-            //}
-            /*
+            }
+            
             catch (Exception e)
             {
                 Console.Error.WriteLine("Error Encountered: ");
                 Console.Error.WriteLine(e.Message);
             }
-             * */
+
             Console.WriteLine("Press any button to exit...");
             Console.ReadKey();
 
