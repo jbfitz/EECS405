@@ -188,7 +188,7 @@ namespace FrequencyTrieSpace
             }
 
 
-            if (this.level <= this.min)
+            if (this.level+1 < this.min)
             {
                 foreach (TrieNode child in children.Values)
                 {
