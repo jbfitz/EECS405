@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FrequencyTrieSpace.Trie;
+using FrequencyTrieSpace;
 
 namespace VGram
 {
@@ -12,45 +13,49 @@ namespace VGram
         public int qMax;
         public int qMin;
         public int threshold;
+        public Trie vgramDictionary;
         public Dictionary<String, String> gramDictionary;
 
         static void Main(string[] args)
         {
+            VGramSearch vgs = new VGramSearch();
             // Construct GramDictionary
-            try
-            {
-                GenerateGramDictionary("The Prince.txt");
+            vgs.vgramDictionary = new Trie(4, 6);
+            vgs.GenerateGramDictionary("The Prince.txt");
+            Console.WriteLine(vgs.vgramDictionary.ToString());
+            
 
-                Console.WriteLine("What search do you want to look at?");
-                String querystring = Console.ReadLine();
-
-
-
-                Console.WriteLine("Valid Strings:");
+            Console.WriteLine("What search do you want to look at?");
+            String querystring = Console.ReadLine();
 
 
-            }
 
-            catch (Exception e)
-            {
-                Console.Error.WriteLine("Error Encountered: ");
-                Console.Error.WriteLine(e.Message);
-            }
+            Console.WriteLine("Valid Strings:");
 
             Console.WriteLine("Press any button to exit...");
             Console.ReadKey();
 
         }
 
-        public static void GenerateGramDictionary(String filename)
+        public void GenerateGramDictionary(String filename)
         {
-
-        }
-
-
-        public void Prune()
-        {
-
+            using (StreamReader sr = new StreamReader(filename))
+            {
+                while (!sr.EndOfStream)
+                {
+                    String ln = sr.ReadLine();
+                    if (ln.Length > 0)
+                    {
+                        String[] words = ln.Split(' ');
+                        if (words.Length > 0)
+                        {
+                            this.vgramDictionary.AddStrings(words);
+                        }
+                    }
+                }
+                this.vgramDictionary.Prune();
+                Console.WriteLine("Trie constructed!");
+            }
         }
     }
 }
