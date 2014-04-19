@@ -12,7 +12,7 @@ namespace FrequencyTrieSpace
         public TrieNode root;
         public int minLength;
         public int maxLength;
-        public int threshold = 50;
+        public int threshold = 25;
 
         /// <summary>
         /// A trie-structure that stores grams character by character
@@ -27,23 +27,22 @@ namespace FrequencyTrieSpace
             root = new TrieNode('\0');
             root.max = maxLength;
             root.min = minLength;
-            root.level = -1;
-            
+            root.level = -1; 
         }
 
         /// <summary>
         /// Uses an array of strings to add to or construct a trie
         /// </summary>
         /// <param name="strings"></param>
-        public void AddStrings(String[] strings)
+        public void AddStrings(string[] strings)
         {
             if (strings.Length == 0)
             {
-                Console.Error.WriteLine("Warning: No Strings were passed in. Exiting Trie Construction...");
+                Console.Error.WriteLine("Warning: No strings were passed in. Exiting Trie Construction...");
                 return;
             }
 
-            foreach (String s in strings)
+            foreach (string s in strings)
             {
                 if (s != "")
                 {
@@ -57,12 +56,41 @@ namespace FrequencyTrieSpace
 
                         if (gramLength >= minLength)
                         {
-                            String substring = s.Substring(i, gramLength);
-                            root.AddString(substring);
+                            PositionPair pair = new PositionPair(s, i);
+                            string substring = s.Substring(i, gramLength);
+                            root.AddString(substring, pair);
                         }
                     }
                 }
             }
+        }
+
+
+        public TrieNode LongestMatchingVGRAM(string s)
+        {
+            TrieNode currentNode = this.root;
+            int index = 0;
+            bool endVgramSearch = false;
+
+            while(!endVgramSearch && index<s.Length){
+                char currentChar = s[index];
+                if (currentNode.children.ContainsKey(currentChar))
+                {
+                    currentNode = currentNode.children[currentChar];
+                    index++;
+                }
+                else
+                {
+                    endVgramSearch = true;
+                }
+            }
+
+            if (index < minLength)
+            {
+                return null;
+            }
+
+            return currentNode.children['\0'];
         }
 
         public void Prune()
@@ -70,7 +98,7 @@ namespace FrequencyTrieSpace
             root.Prune(threshold);
         }
 
-        override public String ToString()
+        override public string ToString()
         {
             return root.AllStrings();
         }
@@ -84,6 +112,7 @@ namespace FrequencyTrieSpace
         public int max { get; set; }
         public int frequency {get; set;}
         public int level;
+        public HashSet<PositionPair> pairs;
         public TrieNode parent;
 
 
@@ -97,6 +126,7 @@ namespace FrequencyTrieSpace
         {
             character = c;
             children = new Dictionary<char, TrieNode>();
+            pairs = new HashSet<PositionPair>();
         }
 
 
@@ -104,18 +134,18 @@ namespace FrequencyTrieSpace
         /// Recursively adds the content of the string to the node as children. 
         /// </summary>
         /// <param name="s"></param>
-        public void AddString(String s)
+        public void AddString(string s, PositionPair p)
         {
             char firstChar = s[0];
-            AddChild('\0');
-            AddChild(firstChar);
+            AddChild('\0', p);
+            AddChild(firstChar, p);
             if (s.Substring(1) != "")
             {
-                children[firstChar].AddString(s.Substring(1));
+                children[firstChar].AddString(s.Substring(1), p);
             }
             else
             {
-                children[firstChar].AddChild('\0');
+                children[firstChar].AddChild('\0', p);
             }
         }
 
@@ -124,7 +154,7 @@ namespace FrequencyTrieSpace
         /// If the node already exists, increment the frequency of that node
         /// </summary>
         /// <param name="c"></param>
-        public void AddChild(char c)
+        public void AddChild(char c, PositionPair p)
         {
             if (!this.children.ContainsKey(c))
             {
@@ -134,10 +164,19 @@ namespace FrequencyTrieSpace
                 this.children[c].max = this.max;
                 this.children[c].parent = this;
                 this.children[c].frequency = 1;
+                this.children[c].pairs.Add(p);
             }
             else
             {
                 this.children[c].frequency++;
+                if (!this.children[c].pairs.Contains(p))
+                {
+                    this.children[c].pairs.Add(p);
+                }
+                else
+                {
+                    int x = 0;
+                }
             }
         }
 
@@ -146,7 +185,6 @@ namespace FrequencyTrieSpace
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-
         public int CompareTo(TrieNode other)
         {
             if (other == null)
@@ -269,27 +307,26 @@ namespace FrequencyTrieSpace
             }
         }
 
-
-        public String AllStrings()
+        public string AllStrings()
         {
-            String startingString = "";
-            String returnString = "";
+            string startingstring = "";
+            string returnstring = "";
 
             foreach (TrieNode child in children.Values)
             {
-                List<String> substrings = child.GenerateStrings(startingString);
-                foreach (String substring in substrings)
+                List<string> substrings = child.GenerateStrings(startingstring);
+                foreach (string substring in substrings)
                 {
-                    returnString += substring + "\n";
+                    returnstring += substring + "\n";
                 }
             }
 
-            return returnString;
+            return returnstring;
         }
 
-        public List<String> GenerateStrings(String s)
+        public List<string> GenerateStrings(string s)
         {
-            List<String> endlist = new List<String>();
+            List<string> endlist = new List<string>();
 
             if (this.IsLeaf())
             {
@@ -299,7 +336,7 @@ namespace FrequencyTrieSpace
             {
                 foreach (TrieNode child in children.Values)
                 {
-                    foreach (String substring in child.GenerateStrings(s + this.character))
+                    foreach (string substring in child.GenerateStrings(s + this.character))
                     {
                         endlist.Add(substring);
                     }
@@ -308,7 +345,7 @@ namespace FrequencyTrieSpace
             return endlist;
         }
 
-        override public String ToString()
+        override public string ToString()
         {
             if (parent.character == '\0')
             {
@@ -322,11 +359,57 @@ namespace FrequencyTrieSpace
                 }
                 else
                 {
-                    return parent.ToString() + " - End";
+                    return parent.ToString();
                 }
                 
             }
         }
 
+    }
+
+
+    public class PositionPair : IComparable<PositionPair>, IEquatable<PositionPair>
+    {
+        public string value;
+        public int position;
+
+        /// <summary>
+        /// Positional pairs stored in the trienodes refering to the strings. 
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="i"></param>
+
+        public PositionPair(string s, int i)
+        {
+            value = s;
+            position = i;
+        }
+
+        public int CompareTo(PositionPair pair){
+            if (this.value == pair.value && this.position == pair.position)
+            {
+                return 0;
+            }
+
+            if (this.position.Equals(pair.position))
+            {
+                return this.value.CompareTo(pair.value);
+            }
+            else
+            {
+                return this.position.CompareTo(pair.position);
+            }
+        }
+
+        public bool Equals(PositionPair pair)
+        {
+            return this.position == pair.position && this.value == pair.value;
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.value.GetHashCode() + this.position.GetHashCode()).GetHashCode();        
+        }
+        
     }
 }
