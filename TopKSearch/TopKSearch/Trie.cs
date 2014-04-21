@@ -36,6 +36,11 @@ namespace TrieSpace
             }
         }
 
+        public void AddString(String s)
+        {
+            root.AddString(s);
+        }
+
         public void SetIds()
         {
             root.SetIds();
