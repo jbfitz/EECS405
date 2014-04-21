@@ -65,6 +65,25 @@ namespace FrequencyTrieSpace
             }
         }
 
+        public void AddString(string s)
+        {
+            for (int i = 0; i + minLength < s.Length; i++)
+            {
+                int gramLength = maxLength;
+                if (i + maxLength >= s.Length)
+                {
+                    gramLength = s.Length - i - 1;
+                }
+
+                if (gramLength >= minLength)
+                {
+                    PositionPair pair = new PositionPair(s, i);
+                    string substring = s.Substring(i, gramLength);
+                    root.AddString(substring, pair);
+                }
+            }
+        }
+
 
         public TrieNode LongestMatchingVGRAM(string s)
         {

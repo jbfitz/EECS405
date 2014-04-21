@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FrequencyTrieSpace;
+using MySql.Data.MySqlClient;
 
 namespace VGram
 {
@@ -15,12 +16,45 @@ namespace VGram
 
         static void Main(string[] args)
         {
-            VGramSearch vgs = new VGramSearch();
             // Construct GramDictionary
-            vgs.vgramDictionary = new Trie(2, 4);
-            vgs.GenerateGramDictionary("The Prince.txt");
-            Console.WriteLine(vgs.vgramDictionary.ToString());
-            
+            VGramSearch vgs = new VGramSearch();
+            vgs.vgramDictionary = new Trie(4, 6);
+
+            string cs = @"Server=54.186.104.127;Database=imdb;Uid=root;Pwd=405project";
+            MySqlConnection conn = null;
+            MySqlDataReader rdr = null;
+
+            try
+            {
+                conn = new MySqlConnection(cs);
+                conn.Open();
+                Console.WriteLine("MySql version : {0}", conn.ServerVersion);
+
+
+                string stm = "SELECT * FROM movies;";
+                MySqlCommand cmd = new MySqlCommand(stm, conn);
+                rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    vgs.vgramDictionary.AddString(rdr.GetString(0).Trim());
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Error: {0} ", ex.ToString());
+                return;
+            }
+            finally
+            {
+                if (conn != null)
+                {
+                    conn.Close();
+                }
+            }
+
+
+            Console.WriteLine("Trie Constructed");
 
             Console.WriteLine("What search do you want to look at?");
             string querystring = Console.ReadLine();
@@ -28,12 +62,11 @@ namespace VGram
 
             List<string> results = vgs.VSearch(querystring);
 
+            Console.WriteLine("Valid Strings:");
             foreach (string result in results)
             {
                 Console.WriteLine(result);
-            }
-
-            Console.WriteLine("Valid Strings:");
+            }                       
 
             Console.WriteLine("Press any button to exit...");
             Console.ReadKey();
@@ -105,7 +138,7 @@ namespace VGram
 
             List<string> foundStrings = new List<string>();
 
-            while (foundStrings.Count < 10 && k < 5)
+            while (foundStrings.Count < 10 && k < 10)
             {
                 foreach(string key in candidateStrings.Keys){
                     if (LengthBounded(key, query, k))
