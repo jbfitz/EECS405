@@ -27,7 +27,7 @@ namespace TopKSearch
                 Console.WriteLine("MySql version : {0}", conn.ServerVersion);
 
 
-                string stm = "SELECT * FROM movies;";
+                string stm = "SELECT * FROM movies";//"SELECT title FROM dblp_pub_new;";
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
                 rdr = cmd.ExecuteReader();
 
@@ -38,8 +38,7 @@ namespace TopKSearch
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine("Error: {0} ", ex.ToString());
-                return;
+                //Console.WriteLine("Error: {0} ", ex.ToString());
             }
             finally
             {
