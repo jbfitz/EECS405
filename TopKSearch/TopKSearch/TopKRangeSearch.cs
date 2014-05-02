@@ -33,7 +33,7 @@ namespace TopKSearch
 
                 while (rdr.Read())
                 {
-                    trie.AddString(rdr.GetString(0).Trim());
+                    trie.AddString(rdr.GetString(0).Trim().ToLower());
                 }
             }
             catch (MySqlException ex)
@@ -72,7 +72,7 @@ namespace TopKSearch
                     else
                     {
                         Console.WriteLine("How many terms do you want back?");
-                        String strk = Console.ReadLine();
+                        String strk = Console.ReadLine().ToLower();
                         int k = Int16.Parse(strk);
 
                         HashSet<String> topK = SearchTopK(querystring, k);
