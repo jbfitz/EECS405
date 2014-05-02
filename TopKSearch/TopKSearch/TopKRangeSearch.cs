@@ -58,22 +58,33 @@ namespace TopKSearch
             try
             {
                 Console.WriteLine("Trie Constructed!\n");
-                Console.WriteLine("What search do you want to look at?");
-                String querystring = Console.ReadLine();
+                Console.WriteLine("Beginning Search. To exit, input an empty line");
 
-                Console.WriteLine("How many terms do you want back?");
-                String strk = Console.ReadLine();
-                int k = Int16.Parse(strk);
-
-                HashSet<String> topK = SearchTopK(querystring, k);
-
-                Console.WriteLine("Valid Strings:");
-                foreach (String found in topK)
+                bool searching = true;
+                do
                 {
-                    Console.WriteLine(found);
-                }
+                    Console.WriteLine("What search do you want to look at?");
+                    String querystring = Console.ReadLine();
 
-                
+                    if (querystring == "")
+                    {
+                        searching = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("How many terms do you want back?");
+                        String strk = Console.ReadLine();
+                        int k = Int16.Parse(strk);
+
+                        HashSet<String> topK = SearchTopK(querystring, k);
+
+                        Console.WriteLine("Valid Strings:");
+                        foreach (String found in topK)
+                        {
+                            Console.WriteLine(found);
+                        }
+                    }
+                } while (searching);
             }
             
             catch (Exception e)
