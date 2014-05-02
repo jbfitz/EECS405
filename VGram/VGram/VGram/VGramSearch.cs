@@ -11,6 +11,9 @@ namespace VGram
 {
     class VGramSearch
     {
+        public int vgramMin;
+        public int vgramMax;
+        
 
         public Trie vgramDictionary;
 
@@ -18,9 +21,11 @@ namespace VGram
         {
             // Construct GramDictionary
             VGramSearch vgs = new VGramSearch();
-            vgs.vgramDictionary = new Trie(4, 6);
+            vgs.vgramMin = 4;
+            vgs.vgramMax = 6;
+            vgs.vgramDictionary = new Trie(vgs.vgramMin, vgs.vgramMax);
 
-            string cs = @"Server=54.186.104.127;Database=imdb;Uid=root;Pwd=405project";
+            string cs = @"Server=54.186.104.127;Database=dblp;Uid=root;Pwd=405project";
             MySqlConnection conn = null;
             MySqlDataReader rdr = null;
 
@@ -31,7 +36,7 @@ namespace VGram
                 Console.WriteLine("MySql version : {0}", conn.ServerVersion);
 
 
-                string stm = "SELECT * FROM movies;";
+                string stm = "SELECT title FROM dblp_pub_new;";
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
                 rdr = cmd.ExecuteReader();
 
@@ -42,8 +47,7 @@ namespace VGram
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine("Error: {0} ", ex.ToString());
-                return;
+                //Console.WriteLine("Error: {0} ", ex.ToString());
             }
             finally
             {
@@ -138,7 +142,7 @@ namespace VGram
 
             List<string> foundStrings = new List<string>();
 
-            while (foundStrings.Count < 10 && k < 10)
+            while (foundStrings.Count < 10 && foundStrings.Count <= candidateStrings.Count)
             {
                 foreach(string key in candidateStrings.Keys){
                     if (LengthBounded(key, query, k))

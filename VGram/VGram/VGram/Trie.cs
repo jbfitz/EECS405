@@ -12,7 +12,7 @@ namespace FrequencyTrieSpace
         public TrieNode root;
         public int minLength;
         public int maxLength;
-        public int threshold = 25;
+        public int threshold = 10;
 
         /// <summary>
         /// A trie-structure that stores grams character by character
@@ -79,7 +79,35 @@ namespace FrequencyTrieSpace
                 {
                     PositionPair pair = new PositionPair(s, i);
                     string substring = s.Substring(i, gramLength);
-                    root.AddString(substring, pair);
+
+                    bool successfullyAdded = false;
+
+                    try
+                    {
+                        root.AddString(substring, pair);
+                        successfullyAdded = true;
+                        root.frequency++;
+                    }
+                    catch (OutOfMemoryException exc)
+                    {
+                        root.Prune(threshold);
+                        Console.WriteLine("Preemptive Pruning Called. Too much data");
+                        Console.WriteLine("Grams examined: " + root.frequency);
+                    }
+
+                    if (!successfullyAdded)
+                    {
+                        try
+                        {
+                            root.AddString(substring, pair);
+                            root.frequency++;
+                        }
+                        catch (OutOfMemoryException exc)
+                        {
+                            Console.Error.Write("Error: Out of memory exception occured. Ignoring Element");
+                            Console.WriteLine("Grams examined: " + root.frequency);
+                        }
+                    }
                 }
             }
         }
