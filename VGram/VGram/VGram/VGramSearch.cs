@@ -59,19 +59,31 @@ namespace VGram
 
 
             Console.WriteLine("Trie Constructed");
+            Console.WriteLine("Beginning Search. To exit, type the empty line");
 
-            Console.WriteLine("What search do you want to look at?");
-            string querystring = Console.ReadLine();
-            Console.WriteLine("\n\n");
-
-            List<string> results = vgs.VSearch(querystring);
-
-            Console.WriteLine("Valid Strings:");
-            foreach (string result in results)
+            bool searching = true;
+            do
             {
-                Console.WriteLine(result);
-            }                       
+                Console.WriteLine("\nWhat search do you want to look at?");
+                string querystring = Console.ReadLine();
+                Console.WriteLine("\n\n");
 
+                if (querystring == "")
+                {
+                    searching = false;
+                }
+                else
+                {
+                    List<string> results = vgs.VSearch(querystring);
+
+                    Console.WriteLine("Valid Strings:");
+                    foreach (string result in results)
+                    {
+                        Console.WriteLine(result);
+                    }   
+                }            
+            } while (searching);
+           
             Console.WriteLine("Press any button to exit...");
             Console.ReadKey();
 
