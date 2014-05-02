@@ -25,7 +25,7 @@ namespace VGram
             vgs.vgramMax = 6;
             vgs.vgramDictionary = new Trie(vgs.vgramMin, vgs.vgramMax);
 
-            string cs = @"Server=54.186.104.127;Database=dblp;Uid=root;Pwd=405project";
+            string cs = @"Server=54.186.104.127;Database=imdb;Uid=root;Pwd=405project";
             MySqlConnection conn = null;
             MySqlDataReader rdr = null;
 
@@ -36,7 +36,7 @@ namespace VGram
                 Console.WriteLine("MySql version : {0}", conn.ServerVersion);
 
 
-                string stm = "SELECT title FROM dblp_pub_new;";
+                string stm = "SELECT * FROM movies;";
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
                 rdr = cmd.ExecuteReader();
 
@@ -134,7 +134,7 @@ namespace VGram
                 TrieNode node = vgramSet[key];
                 foreach (PositionPair pair in node.pairs)
                 {
-                    if (pair.position == key)
+                    if (Math.Abs(pair.position - key) < 3) //Remove this line to make the search not positionally based
                     {
                         if (candidateStrings.ContainsKey(pair.value))
                         {
@@ -154,7 +154,7 @@ namespace VGram
 
             List<string> foundStrings = new List<string>();
 
-            while (foundStrings.Count < 10 && foundStrings.Count <= candidateStrings.Count)
+            while (foundStrings.Count < 5 && foundStrings.Count <= candidateStrings.Count && candidateStrings.Count != 0)
             {
                 foreach(string key in candidateStrings.Keys){
                     if (LengthBounded(key, query, k))
