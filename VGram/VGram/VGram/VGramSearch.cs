@@ -11,6 +11,9 @@ namespace VGram
 {
     class VGramSearch
     {
+        public int vgramMin;
+        public int vgramMax;
+        
 
         public Trie vgramDictionary;
 
@@ -18,7 +21,9 @@ namespace VGram
         {
             // Construct GramDictionary
             VGramSearch vgs = new VGramSearch();
-            vgs.vgramDictionary = new Trie(4, 6);
+            vgs.vgramMin = 4;
+            vgs.vgramMax = 6;
+            vgs.vgramDictionary = new Trie(vgs.vgramMin, vgs.vgramMax);
 
             string cs = @"Server=54.186.104.127;Database=imdb;Uid=root;Pwd=405project";
             MySqlConnection conn = null;
@@ -42,8 +47,7 @@ namespace VGram
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine("Error: {0} ", ex.ToString());
-                return;
+                //Console.WriteLine("Error: {0} ", ex.ToString());
             }
             finally
             {
@@ -55,19 +59,31 @@ namespace VGram
 
 
             Console.WriteLine("Trie Constructed");
+            Console.WriteLine("Beginning Search. To exit, type the empty line");
 
-            Console.WriteLine("What search do you want to look at?");
-            string querystring = Console.ReadLine();
-            Console.WriteLine("\n\n");
-
-            List<string> results = vgs.VSearch(querystring);
-
-            Console.WriteLine("Valid Strings:");
-            foreach (string result in results)
+            bool searching = true;
+            do
             {
-                Console.WriteLine(result);
-            }                       
+                Console.WriteLine("\nWhat search do you want to look at?");
+                string querystring = Console.ReadLine();
+                Console.WriteLine("\n\n");
 
+                if (querystring == "")
+                {
+                    searching = false;
+                }
+                else
+                {
+                    List<string> results = vgs.VSearch(querystring);
+
+                    Console.WriteLine("Valid Strings:");
+                    foreach (string result in results)
+                    {
+                        Console.WriteLine(result);
+                    }   
+                }            
+            } while (searching);
+           
             Console.WriteLine("Press any button to exit...");
             Console.ReadKey();
 
@@ -118,7 +134,7 @@ namespace VGram
                 TrieNode node = vgramSet[key];
                 foreach (PositionPair pair in node.pairs)
                 {
-                    if (pair.position == key)
+                    if (Math.Abs(pair.position - key) < 3) //Remove this line to make the search not positionally based
                     {
                         if (candidateStrings.ContainsKey(pair.value))
                         {
@@ -138,7 +154,7 @@ namespace VGram
 
             List<string> foundStrings = new List<string>();
 
-            while (foundStrings.Count < 10 && k < 10)
+            while (foundStrings.Count < 5 && foundStrings.Count <= candidateStrings.Count && candidateStrings.Count != 0)
             {
                 foreach(string key in candidateStrings.Keys){
                     if (LengthBounded(key, query, k))
