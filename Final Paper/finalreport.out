@@ -2,15 +2,18 @@
 \BOOKMARK [1][-]{section.2}{Introduction}{}% 2
 \BOOKMARK [1][-]{section.3}{Problem Definition}{}% 3
 \BOOKMARK [1][-]{section.4}{Related Work}{}% 4
-\BOOKMARK [1][-]{section.5}{Methodology}{}% 5
-\BOOKMARK [2][-]{subsection.5.1}{Data preparation}{section.5}% 6
-\BOOKMARK [2][-]{subsection.5.2}{Development Machines}{section.5}% 7
-\BOOKMARK [2][-]{subsection.5.3}{Cluster identification}{section.5}% 8
-\BOOKMARK [2][-]{subsection.5.4}{Testing}{section.5}% 9
-\BOOKMARK [1][-]{section.6}{Evaluation}{}% 10
-\BOOKMARK [1][-]{section.7}{Results}{}% 11
-\BOOKMARK [2][-]{subsection.7.1}{Cluster generation}{section.7}% 12
-\BOOKMARK [2][-]{subsection.7.2}{Trie generation}{section.7}% 13
-\BOOKMARK [2][-]{subsection.7.3}{Query executions}{section.7}% 14
-\BOOKMARK [1][-]{section.8}{Conclusions}{}% 15
-\BOOKMARK [1][-]{section.9}{References}{}% 16
+\BOOKMARK [2][-]{subsection.4.1}{String Similarity}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Top-K Search}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.3}{Positional VGRAM Search}{section.4}% 7
+\BOOKMARK [1][-]{section.5}{Methodology}{}% 8
+\BOOKMARK [2][-]{subsection.5.1}{Data preparation}{section.5}% 9
+\BOOKMARK [2][-]{subsection.5.2}{Development Machines}{section.5}% 10
+\BOOKMARK [2][-]{subsection.5.3}{Cluster identification}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.4}{Testing}{section.5}% 12
+\BOOKMARK [1][-]{section.6}{Evaluation}{}% 13
+\BOOKMARK [1][-]{section.7}{Results}{}% 14
+\BOOKMARK [2][-]{subsection.7.1}{Cluster generation}{section.7}% 15
+\BOOKMARK [2][-]{subsection.7.2}{Trie generation}{section.7}% 16
+\BOOKMARK [2][-]{subsection.7.3}{Query executions}{section.7}% 17
+\BOOKMARK [1][-]{section.8}{Conclusions}{}% 18
+\BOOKMARK [1][-]{section.9}{References}{}% 19
