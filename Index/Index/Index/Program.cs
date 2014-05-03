@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Net;
+using System.Net.Mime;
+using System.Net.Mail;
 using System.Configuration;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -13,11 +17,11 @@ namespace Index
         static void Main(string[] args)
         {
             //ComputeDistanceMatrix("imdb");
-            ComputeDistanceMatrix("dblp");
-            //Stopwatch sw = Stopwatch.StartNew();
+            //ComputeDistanceMatrix("dblp");
+           
             
             /*
-            System.IO.StreamWriter dblp = new System.IO.StreamWriter("C:\\Users\\Kyle\\Documents\\GitHub\\EECS405\\Index\\Index\\Index\\dblp\\dblpTitles3.txt");
+             * System.IO.StreamWriter dblp = new System.IO.StreamWriter("C:\\Users\\Kyle\\Documents\\GitHub\\EECS405\\Index\\Index\\Index\\dblp\\dblpTitles3.txt");
             int c = 0;
             for (int i = 40; i < 51; i++)
             {
@@ -37,13 +41,19 @@ namespace Index
             }
             dblp.Close();
             
-            Console.WriteLine(c);
-            
-            for (int i = 20; i < 60; i+=2)
-            {
-                Console.WriteLine(i.ToString());
-                System.IO.StreamReader LCSsize = new System.IO.StreamReader("C:\\Users\\Kyle\\Documents\\GitHub\\EECS405\\Index\\Index\\Index\\dblpTitleLCSsize.txt");
-                System.IO.StreamWriter LCSGT = new System.IO.StreamWriter("C:\\Users\\Kyle\\Documents\\GitHub\\EECS405\\Index\\Index\\Index\\dblpLCSGT"+i.ToString()+".txt");
+            Console.WriteLine(c);*/
+
+                Stopwatch sw = Stopwatch.StartNew();
+                System.IO.StreamReader LCSsize = new System.IO.StreamReader("C:\\Users\\Kyle\\Documents\\GitHub\\EECS405\\Index\\Index\\Index\\imdb\\imdbTitleLCSsize.txt");
+                Dictionary<int, System.IO.StreamWriter> writers = new Dictionary<int, System.IO.StreamWriter>();
+                int[] counts = new int[61];
+
+                for (int i = 0; i < 61; i++)
+                {
+                    System.IO.StreamWriter writer = new System.IO.StreamWriter("C:\\Users\\Kyle\\Documents\\GitHub\\EECS405\\Index\\Index\\Index\\imdb\\imdbLCSGT" + i.ToString() + ".txt");
+                    writers.Add(i, writer);
+                    counts[i] = 0;
+                }
 
                 int row = 0;
                 int count = 0;
@@ -55,23 +65,42 @@ namespace Index
                     int col = 0;
                     foreach (string s in sizes)
                     {
-                        if (!string.IsNullOrWhiteSpace(s) && (Convert.ToInt32(s) > i) && (row != col))
+                        if (!string.IsNullOrWhiteSpace(s) && (row != col))
                         {
-                            LCSGT.WriteLine("[" + row + "," + col + "]");
-                            count++;
+                            int i = Convert.ToInt32(s);
+                            if (i > 3)
+                            {
+                                if (i > 60)
+                                {
+                                    (writers[60] as System.IO.StreamWriter).WriteLine("[" + row + "," + col + "]");
+                                    counts[60]++;
+                                }
+                                else
+                                {
+                                    (writers[i] as System.IO.StreamWriter).WriteLine("[" + row + "," + col + "]");
+                                    counts[i]++;
+                                }
+                                count++;
+                            }
                         }
                         col++;
                     }
                     row++;
-                    if (row % 10000 == 0)
+                    if (row % 1000 == 0)
                     {
                         Console.WriteLine(row.ToString());
                     }
                 }
-                sw.Stop();
+
+                for (int i = 0; i < 61; i++)
+                    writers[i].Close();
+                    sw.Stop();
                 Console.WriteLine("Elapsed time: " + sw.Elapsed.TotalSeconds);
+                for (int i = 0; i < 60; i++)
+                {
+                    Console.WriteLine(i.ToString() + " :: " + counts[i].ToString());
+                }
                 Console.WriteLine(count.ToString());
-            }*/
             Console.ReadKey();
         }
 

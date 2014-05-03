@@ -10,4 +10,7 @@
 \BOOKMARK [1][-]{section.6}{Evaluation}{}% 10
 \BOOKMARK [1][-]{section.7}{Results}{}% 11
 \BOOKMARK [2][-]{subsection.7.1}{Cluster generation}{section.7}% 12
-\BOOKMARK [1][-]{section.8}{Conclusions}{}% 13
+\BOOKMARK [2][-]{subsection.7.2}{Trie generation}{section.7}% 13
+\BOOKMARK [2][-]{subsection.7.3}{Query executions}{section.7}% 14
+\BOOKMARK [1][-]{section.8}{Conclusions}{}% 15
+\BOOKMARK [1][-]{section.9}{References}{}% 16
