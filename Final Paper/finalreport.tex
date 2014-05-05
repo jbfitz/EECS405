@@ -32,7 +32,7 @@
 { \bfseries
 {\huge EECS 405 Final Report\\[1cm]}
 {\Large for\\[1cm]}
-{\large Improving Efficiency of String Similarity Searches through Indexed Pruning\\[3cm]}
+{\large Improving Efficiency of String Similarity Searches through Clustered and Indexed Pruning\\[3cm]}
 {\large Prepared by\\[1cm]James Fitzpatrick\\Kyle Patterson\\[2cm]
 Version 1.0\\
 May 2, 2014\\
@@ -58,7 +58,7 @@ One particular field of computer science, data mining, was established specifica
 Let S be a complete data set consisting of strings from alphabet $\Sigma$. For each string $s_i$ in S, we define the following:
 \begin{itemize}
 \item $\length(s_i)$ = number of characters in $s_i$.\\ For example, $\length('run') = 3$.
-\item LCS($s_i$,$s_j$) = longest common substring between $s_i$ and $s_j$.\\ For example, LCS('$run$','$fun$') = '$un$'.
+\item LCS($s_1$,$s_2$) = longest common substring between $s_1$ and $s_2$.\\ For example, LCS('$run$','$fun$') = '$un$'.
 \end{itemize}
 
 We define the InvertedList I as follows:
@@ -66,14 +66,36 @@ We define the InvertedList I as follows:
 \begin{itemize}
 \item For each element $i$ in I, every element of $i$ is either an InvertedList or a string
 \item Every InvertedList $i$ in I has a key that equals the longest common substring of all elements in $i$
+\item When inserting a string pair $s_1, s_2$ into I, we recursively scan I for the key LCS($s_1, s_2$). If the key is present and the strings are not yet in I, we insert $s_1$ and $s_2 $ into the list with the appropriate key. If the key is not present, we construct a list containing both strings and insert it into I with key LCS($s_1, s_2$).
+\item When inserting a string $s_i$ into I, we recursively scan I until we find the maximum longest common substring in I. 
 \end{itemize}
+
+\begin{algorithm}
+\caption{Insert $s_1, s_2$ into I with key LCS($s_1, s_2$)}
+\label{Algorithm 2}
+\begin{algorithmic}[1]
+\STATE C = new List();
+\FORALL{i \textbf{in} I}
+\IF{i.key \textbf{equals} LCS($s_1, s_2$)}
+\STATE C.Add(i);
+\ENDIF
+\ENDFOR
+\FORALL{c \textbf{in} C}
+\FORALL {i \textbf{in} C}
+\IF{i.key \textbf{equals} LCS($s_1, s_2$)}
+\STATE C.Add(i);
+\ENDIF
+\ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
 
 \section{Related Work}
 TODO: Merge together literature review
 
 \subsection{String Similarity}
 
-\subsection{Top-K Search}
+\subsubsection{Top-K Search}
 Top-K Search, a search utilized in String Similarity, computes the top k results by comparing a query string to a dataset and finds the k elements that have the smallest edit distance from this string. However, this algorithm can become computationally expensive as the algorithm requires comparing the query to all strings in a dataset. To reduce the number of necessary computations, we implement a version of the pivotal Top-K Search as described by Deng et al. A trie-based approach can take advantage of the similarity strings. Each entry in the trie represents a character, save the root which is the null character. The path from the root to a leaf is a inorder representation of that string. This structure redcudes the number of strings we need to store in full by taking advantage of strings with similar prefixes. By using this trie, we can incrementally search the entire search space simultaneously utilizing edit distance measurements. Once k strings have been found, we have our strings to return. 
 
 \subsection{Positional VGRAM Search}
@@ -128,11 +150,15 @@ Tries were evaluated using the following method:
 Tests were executed for data subsets in increments of 10,000 from 10,000 elements to the full data set, with 30 queries executed per trie. Query structures used include VGRAM and Top-K Tries.
 
 \section{Evaluation}
+Tries were tested once they successfully returned a matching result within 2 string edits\\
+\\
+Tests were evaluated on running time, as reported by the C\# native Stopwatch class. 
 TODO: Explain what we measured in the testing phase and how we'll interpret the results.
 
 \newpage
 \section{Results}
-\subsection{Cluster generation}
+\subsection{Index generation}
+
 TODO: Clustering is bad, mmkay?
 
 \subsection{Trie generation}
